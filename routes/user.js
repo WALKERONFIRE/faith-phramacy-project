@@ -48,8 +48,8 @@ router.delete("/delete/:id",async(req,res)=>{
 
 
 
-//GetUserStatus
-router.get("/status",async(req,res)=>{
+//GetUserState
+router.get("/state",async(req,res)=>{
     const date = new Date();
     const lastYear = new Date(date.setFullYear(date.getFullYear() - 1));
 
