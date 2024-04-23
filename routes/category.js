@@ -23,8 +23,7 @@ router.delete("/delete/:id",async(req,res)=>{
     }
     });
 
-// get Category by ID
-
+//get Category by ID
 router.get("/find/:id", async (req,res)=>{
     try{
         const category = await Category.findById(req.params.id);
@@ -35,7 +34,19 @@ router.get("/find/:id", async (req,res)=>{
         res.status(500).json(err);
     }
 });
+
 //create category
+router.post("/create", async(req,res)=>{
+const newCategory = new Category({
+    categoryname: req.body.categoryname
+});
+try{
+    const savedcatgory = await newCategory.save();
+    res.status(201).json(savedcatgory);
+}catch(err){
+    res.status(500).json(err);
+}
+});
 
 
 module.exports = router;
