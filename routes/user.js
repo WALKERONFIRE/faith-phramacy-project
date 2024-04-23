@@ -1,5 +1,5 @@
 const User = require("../Models/User");
-
+const bcrypt = require("bcrypt");
 const router = require ("express").Router();
 
 module.exports = router;
@@ -18,6 +18,8 @@ router.get("/", async (req,res)=>{
     }
 });
 
+
+
 // get user by ID
 
 router.get("/find/:id", async (req,res)=>{
@@ -32,6 +34,7 @@ router.get("/find/:id", async (req,res)=>{
 });
 
 
+
 //DeleteUser 
 router.delete("/delete/:id",async(req,res)=>{
     try{
@@ -41,6 +44,9 @@ router.delete("/delete/:id",async(req,res)=>{
     res.status(500).json(err)
     }
     });
+
+
+
 
 //GetUserStatus
 router.get("/status",async(req,res)=>{
@@ -66,5 +72,23 @@ router.get("/status",async(req,res)=>{
     
 }catch(err){
         res.status(500).json(err)
+    }
+});
+
+
+
+//UpdateUser
+router.put("/update/:id",async(req,res)=>{
+    if(req.body.password){
+        const salt = await bcrypt.genSalt(10);
+        req.body.password = await bcrypt.hash(req.body.password,salt);
+    }
+    try{
+        const updateUser = await User.findByIdAndUpdate(req.params.id,{
+            $set: req.body
+        },{new:true});
+        res.status(200).json(updateUser);
+    }catch(err){
+        res.status(500).json(err);
     }
 });
