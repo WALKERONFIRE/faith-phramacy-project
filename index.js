@@ -15,7 +15,11 @@ mognoose
     {
         console.log(err);
     })
+
+ app.use(express.json());
+ app.use("/api/auth", authRoute);
  app.use("/api/user", userRoute);
+
 
 app.use(express.json());
 app.listen(process.env.port || 500 , ()=>{
