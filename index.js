@@ -18,7 +18,8 @@ mognoose
 
  app.use(express.json());
  app.use("/api/auth", authRoute);
- 
+ app.use(express.json());
+ app.use("/api/user", userRoute);
 
 
 app.use(express.json());
