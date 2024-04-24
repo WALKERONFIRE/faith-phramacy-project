@@ -23,7 +23,7 @@ mognoose
  app.use("/api/category", categoryRoute);
 
 
-app.listen(process.env.port || 500 , ()=>{
+ app.listen(port , ()=>{
     console.log("Backend server is running!"); 
 });
 app.use("/api/auth" , authRoute);
