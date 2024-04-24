@@ -5,6 +5,7 @@ const authRoute = require("./routes/auth");
 const dotenv = require("dotenv");
 const userRoute= require("./routes/user");
 const categoryRoute = require("./routes/category");
+const productRoute = require("./routes/product");
 dotenv.config();
 
 
@@ -21,6 +22,7 @@ mognoose
  app.use("/api/auth", authRoute);
  app.use("/api/user", userRoute);
  app.use("/api/category", categoryRoute);
+ app.use("/api/product", productRoute);
 
 
  app.listen(port , ()=>{
