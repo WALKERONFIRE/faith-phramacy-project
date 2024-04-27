@@ -1,10 +1,13 @@
 const mongoose = require("mongoose");
-const CartSchema = new mongoose.Schema({
-    Userid: {type : String , required : TRUE},
+const product = require("../Models/Product");
+const user = require("../Models/User");
+
+const OrderSchema = new mongoose.Schema({
+    Userid: {type: mongoose.Schema.Types.ObjectId, required: true, ref:user},
     products : [
         {
             productid: {
-                type : String,
+                type: mongoose.Schema.Types.ObjectId, required: true, ref:product
             },
             quantity : {
                 type: Number,
@@ -12,11 +15,11 @@ const CartSchema = new mongoose.Schema({
             },
         },
     ],
-    amount : {type : Number , required: TRUE},
-    address: {type : Object , required : TRUE},
+    amount : {type : Number},
+    address: {type : Object , required : true},
     status : {type : String , default : "pending" }
 },
 {timestamps : true }
 );
 
-module.exports = mongoose.model("Cart" , CartSchema);
+module.exports = mongoose.model("Order" , OrderSchema);

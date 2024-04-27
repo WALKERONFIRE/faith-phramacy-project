@@ -1,4 +1,4 @@
-const router = require("./user");
+const router = require ("express").Router();
 
 //create
 router.post("/", async (req,res)=>

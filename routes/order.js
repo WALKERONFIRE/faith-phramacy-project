@@ -1,18 +1,30 @@
 const Order = require("../Models/Order");
+const Product = require("../Models/Product");
 
 const router = require("express").Router();
 
+//Create order
 router.post("/", async (req, res) => {
     const newOrder = new Order(req.body);
-    try{
+    try {
+        // Calculate total price of the products in the order
+        let totalPrice = 0;
+        for (const item of req.body.products) {
+            const product = await Product.findById(item.productid);
+            totalPrice += product.price * item.quantity;
+        }
+        
+        // Set the total amount in the order
+        newOrder.amount = totalPrice;
+
         const saveOrder = await newOrder.save();
-        res.status(200).jason(saveOrder);
-    } catch (err){
+        res.status(200).json(saveOrder);
+    } catch (err) {
         res.status(500).json(err);
     }
-
 });
 
+//edit order
 router.put("/:id" , async(req,res)=>{
     try{
 const updateOrder = await Order.findByIDAndUpdate(
@@ -20,7 +32,7 @@ const updateOrder = await Order.findByIDAndUpdate(
     {
         $set: req.body,
     },
-    {new: TRUE}
+    {new: true}
 );
     res.status(200).json(updateOrder);
     } catch (err){
@@ -29,6 +41,9 @@ const updateOrder = await Order.findByIDAndUpdate(
   
 });
 
+
+
+//delete order
 router.delete("/:id", async(req,res)=> {
 
     try{
@@ -40,7 +55,7 @@ router.delete("/:id", async(req,res)=> {
     }
 
     });
-
+    //get one order
     router.get("/find/:userId", async(req,res) =>{
         try{
             const orders = await Order.find({userId: req.params.userId});
@@ -50,6 +65,8 @@ router.delete("/:id", async(req,res)=> {
         }
     });
 
+    //get all orders
+    
     router.get("/" , async(req,res) => {
         try{
             const orders = await Order.find();
