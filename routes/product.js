@@ -1,9 +1,9 @@
 const Product = require("../Models/Product");
-
+const { verifyToken,verifyTokenAndAuthorization , verifyTokenAndAdmin } = require("./verifyToken");
 const router = require('express').Router();
 
 //create a new
-router.post('/', async (req, res) => {
+router.post('/',verifyTokenAndAdmin,async (req, res) => {
     const newProduct = new Product(req.body)
     try{
         const savedProduct = await newProduct.save();
@@ -14,7 +14,7 @@ router.post('/', async (req, res) => {
 })
 
 //update product
-router.put("/:id", async (req, res)=>{
+router.put("/:id",verifyTokenAndAdmin,async (req, res)=>{
     
     try {
         const updatedProduct = await Product.findByIdAndUpdate(
@@ -33,7 +33,7 @@ router.put("/:id", async (req, res)=>{
 });
 
 //delete product
-router.delete("/:id", async (req, res)=>{
+router.delete("/:id",verifyTokenAndAdmin,async (req, res)=>{
     try {
         await Product.findByIdAndDelete(req.params.id)
         res.status(200).json("Product deleted successfully");
@@ -43,7 +43,7 @@ router.delete("/:id", async (req, res)=>{
 })
 
 //get product by ID
-router.get("/find/:id", async (req, res)=>{
+router.get("/find/:id",verifyTokenAndAdmin, async (req, res)=>{
     try {
         const product = await Product.findById(req.params.id)
         res.status(200).json(product);
@@ -53,7 +53,7 @@ router.get("/find/:id", async (req, res)=>{
 })
 
 //get all products
-router.get("/", async (req, res)=>{
+router.get("/",verifyTokenAndAdmin,async (req, res)=>{
     try {
         let products;
         products = await Product.find(req.body.categoryId);

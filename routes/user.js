@@ -1,5 +1,6 @@
 const User = require("../Models/User");
 const bcrypt = require("bcrypt");
+const { verifyToken,verifyTokenAndAuthorization , verifyTokenAndAdmin } = require("./verifyToken");
 const router = require ("express").Router();
 
 module.exports = router;
@@ -7,7 +8,7 @@ module.exports = router;
 
 //get all users 
 
-router.get("/", async (req,res)=>{
+router.get("/",verifyTokenAndAdmin,async (req,res)=>{
     try{
         const user = await User.find();
         res.status(200).json(user);
@@ -22,7 +23,7 @@ router.get("/", async (req,res)=>{
 
 // get user by ID
 
-router.get("/find/:id", async (req,res)=>{
+router.get("/find/:id",verifyTokenAndAdmin,async (req,res)=>{
     try{
         const user = await User.findById(req.params.id);
         res.status(200).json(user);
@@ -36,7 +37,7 @@ router.get("/find/:id", async (req,res)=>{
 
 
 //DeleteUser 
-router.delete("/delete/:id",async(req,res)=>{
+router.delete("/delete/:id",verifyTokenAndAuthorization,async(req,res)=>{
     try{
     await User.findByIdAndDelete(req.params.id)
     res.status(200).json("User has been deleted")
@@ -49,7 +50,7 @@ router.delete("/delete/:id",async(req,res)=>{
 
 
 //GetUserState
-router.get("/state",async(req,res)=>{
+router.get("/state",verifyTokenAndAdmin,async(req,res)=>{
     const date = new Date();
     const lastYear = new Date(date.setFullYear(date.getFullYear() - 1));
 
@@ -78,9 +79,9 @@ router.get("/state",async(req,res)=>{
 
 
 //UpdateUser
-router.put("/update/:id",async(req,res)=>{
+router.put("/update/:id",verifyTokenAndAdmin,async(req,res)=>{
     if(req.body.password){
-        const salt = await bcrypt.genSalt(10);
+        const salt = await bcrypt.genSalt();
         req.body.password = await bcrypt.hash(req.body.password,salt);
     }
     try{

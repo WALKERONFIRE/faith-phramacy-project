@@ -1,7 +1,7 @@
 const router = require ("express").Router();
-
+const { verifyToken,verifyTokenAndAuthorization , verifyTokenAndAdmin } = require("./verifyToken");
 //create
-router.post("/", async (req,res)=>
+router.post("/",verifyToken,async (req,res)=>
 {
     const newcart= newcart(req.body);
 
@@ -14,7 +14,7 @@ router.post("/", async (req,res)=>
 });
 
 //UPDATE   
-router.put("/id", async(req,res)=>
+router.put("/id",verifyTokenAndAuthorization,async(req,res)=>
 {
     try{
         const updatedcart = await cart.findByIdAndUpdate(
@@ -32,7 +32,7 @@ router.put("/id", async(req,res)=>
 });
 
 //DELETE
-router.delete("/id", async(req,res)=>
+router.delete("/id",verifyTokenAndAuthorization,async(req,res)=>
 {
     try{
         await cart.findByIdAndDelete(req.params.id);
@@ -44,7 +44,7 @@ router.delete("/id", async(req,res)=>
     }
 });
 //get user cart
-router.get ("/find/:userId",async(req,res)=>{
+router.get ("/find/:userId",verifyTokenAndAuthorization,async(req,res)=>{
     try{
         const cart = await cart.findOne({userId:req.params.userId});
         res.status(200).json(cart);}
@@ -54,7 +54,7 @@ router.get ("/find/:userId",async(req,res)=>{
     }
 });
 //get all carts
-router.get("/", async(req,res)=>{
+router.get("/",verifyTokenAndAdmin,async(req,res)=>{
 
 
 try {

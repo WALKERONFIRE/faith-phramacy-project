@@ -1,6 +1,7 @@
 const  router  = require("express").Router();
 const User = require("../Models/User");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 
 // register endpoint 
@@ -34,19 +35,31 @@ const userValid = await User.findOne(
 {
 username : req.body.username
 });
+const jwtSecret = 'your_hardcoded_secret_here';
+
 !userValid && res.status(401).json("Wrong Credintials");
 const passValid  = await bcrypt.compare(req.body.password , userValid.password)
 if(!passValid)
 {
     res.status(401).json("Wrong Credintials");
 }
-res.status(200).json(userValid);
+const {password , ...others} = userValid._doc;
+const accessToken = jwt.sign(
+    {
+        id : userValid._id,
+        isAdmin : userValid.isAdmin,
+    },
+    process.env.JWT_SEC ,
+    //jwtSecret,
+    {expiresIn:"3d"}
+);
+
+res.status(200).json({...others , accessToken});
 
 }
 catch(err)
 {
     res.status(500).json(err);
-
 }
 });
 
