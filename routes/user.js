@@ -15,7 +15,10 @@ router.get("/find/:id",verifyTokenAndAdmin,userController.getById);
 router.delete("/delete/:id",verifyTokenAndAuthorization,userController.deleteUser);
 
 //GetUserStats
-router.get("/stats",verifyTokenAndAdmin,);
+router.get("/stats",verifyTokenAndAdmin,userController.getStats);
 
 //UpdateUser
 router.put("/update/:id",verifyTokenAndAuthorization,userController.editUser);
+
+//UpdateUserPermission 
+router.put("/updaterole/:id",verifyTokenAndAdmin,userController.editUserPermission);

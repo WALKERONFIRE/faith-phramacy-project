@@ -77,10 +77,32 @@ const editUser = async(req,res)=>{
         res.status(500).json(err);
     }
 };
+
+const editUserPermission = async (req, res) => {
+    try {
+        const selectUser = await User.findById(req.params.id);
+
+        if (selectUser.isAdmin === false) {
+            const updateUser = await User.findByIdAndUpdate(
+                req.params.id,
+                { $set: { isAdmin: true } },
+                { new: true }
+            );
+
+            res.status(200).json(updateUser);
+        } else {
+            res.status(400).json({ message: "User is already an admin." });
+        }
+    } catch (err) {
+        res.status(500).json(err);
+    }
+};
+
 module.exports = {
     getAllUsers,
     getById,
     deleteUser,
     getStats,
-    editUser
+    editUser,
+    editUserPermission
 }
