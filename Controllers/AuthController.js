@@ -34,12 +34,16 @@ const Login = async (req, res) => {
     });
     //const jwtSecret = '2C7wIEzcb2INl3L440TJeWXgMRkLHU/Msv4W72lqrMU=';
     
-    !userValid && res.status(401).json("Wrong Credintials");
+   if(!userValid) 
+   {
+    return res.status(401).json("Wrong Credintials");
+    }
     const passValid  = await bcrypt.compare(req.body.password , userValid.password)
     if(!passValid)
     {
-        res.status(401).json("Wrong Credintials");
+       return  res.status(401).json("Wrong Credintials");
     }
+    console.log("twsr");
     const {password , ...others} = userValid._doc;
     const accessToken = jwt.sign(
         {
