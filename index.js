@@ -14,7 +14,7 @@ dotenv.config();
 
 const port = 3000;
 mognoose
-    .connect("mongodb://localhost:27017/ecommerce0")
+    .connect("mongodb+srv://ahmedhhh3512:pass1234@cluster0.nxaxv1r.mongodb.net/ecommerce?retryWrites=true&w=majority&appName=Cluster0")
     .then(()=> console.log("DB connected successfully!"))
     .catch((err)=>
     {
