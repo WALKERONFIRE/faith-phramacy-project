@@ -16,6 +16,8 @@ router.get("/find/:id",verifyTokenAndAdmin,productController.getById);
 
 //get all products
 router.get("/",verifyTokenAndAdmin,productController.getAllProducts);
+//get products by CategoryID
+router.get("/find/:userId",verifyTokenAndAuthorization,productController.getByCategoryId);
 
 
 module.exports = router;

@@ -91,12 +91,21 @@ const getAllProducts = async (req, res)=>{
         res.status(500).json(err);
     }
 };
+const getByCategoryId = async(req,res) =>{
+    try{
+        const products = await Order.find({categoryId: req.params.categoryId});
+        res.status(200).json(products);
+    } catch (err){
+        res.status(500).json(err);
+    }
+};
 module.exports = {
     addProduct,
     editProduct,
     deleteProduct,
     getById,
     getAllProducts,
+    getByCategoryId,
     upload
 
 }
