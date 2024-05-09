@@ -55,7 +55,7 @@ const Login = async (req, res) => {
         {expiresIn:"3d"}
     );
     
-    res.status(200).json({...others , accessToken});
+   return res.status(200).json({...others , accessToken});
     
     }
     catch(err)

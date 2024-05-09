@@ -1,7 +1,18 @@
 const Product = require("../Models/Product");
+const multer = require("multer");
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, 'uploads/product/') // Specify the directory to save uploads
+    },
+    filename: function (req, file, cb) {
+      cb(null, file.originalname) 
+    }
+  });
+  const upload = multer({ storage: storage });
 
 const addProduct = async (req, res) => {
-    const newProduct = new Product(req.body)
+    const newProduct = new Product(req.body);
+    newProduct.image = req.file.path;
     try{
         const savedProduct = await newProduct.save();
         res.status(200).json(savedProduct); 
@@ -60,6 +71,7 @@ module.exports = {
     editProduct,
     deleteProduct,
     getById,
-    getAllProducts
+    getAllProducts,
+    upload
 
 }

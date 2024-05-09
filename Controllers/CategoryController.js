@@ -1,5 +1,15 @@
 const Category = require("../Models/Category");
-
+const multer = require("multer");
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, 'uploads/category/') // Specify the directory to save uploads
+    },
+    filename: function (req, file, cb) {
+      cb(null, file.originalname) 
+    }
+  });
+  const upload = multer({ storage: storage });
+  
 const getAllCategories = async (req,res)=>{
     try{
         const category = await Category.find();
@@ -34,7 +44,9 @@ const getById = async (req,res)=>{
 
 const addCategory = async(req,res)=>{
     const newCategory = new Category({
-        categoryname: req.body.categoryname
+        categoryname: req.body.categoryname,
+        colour : req.body.colour,
+        image : req.file.path
     });
     try{
         const savedcatgory = await newCategory.save();
@@ -47,5 +59,6 @@ module.exports = {
     getAllCategories,
     deleteCategory,
     getById,
-    addCategory
+    addCategory,
+    upload
 }

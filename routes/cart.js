@@ -3,16 +3,16 @@ const { verifyToken,verifyTokenAndAuthorization , verifyTokenAndAdmin } = requir
 const cartController = require ("../Controllers/CartController");
 
 //create
-router.post("/",verifyToken,cartController.createCart);
+router.post("/create",verifyToken,cartController.createCart);
 
 //UPDATE   
-router.put("/:id",verifyTokenAndAuthorization,cartController.updateCart);
+router.put("/update/:id",verifyTokenAndAuthorization,cartController.updateCart);
 
 //DELETE
-router.delete("/:id",verifyTokenAndAuthorization,cartController.deleteCart);
+router.delete("/delete/:id",verifyTokenAndAuthorization,cartController.deleteCart);
 
 //get user cart
-router.get("/find/:userId",verifyTokenAndAuthorization,cartController.findUserCart);
+router.get("/findbyuser/:userId",verifyTokenAndAuthorization,cartController.findUserCart);
 
 //get all carts
 router.get("/",verifyTokenAndAdmin,cartController.getAllCarts);

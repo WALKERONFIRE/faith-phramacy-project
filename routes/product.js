@@ -3,13 +3,13 @@ const router = require('express').Router();
 const productController = require("../Controllers/ProductController");
 
 //create a new
-router.post('/',verifyTokenAndAdmin,productController.addProduct);
+router.post('/create',verifyTokenAndAdmin,productController.upload.single("image"),productController.addProduct);
 
 //update product
-router.put("/:id",verifyTokenAndAdmin,productController.editProduct);
+router.put("/update/:id",verifyTokenAndAdmin,productController.editProduct);
 
 //delete product
-router.delete("/:id",verifyTokenAndAdmin,productController.deleteProduct);
+router.delete("/delete/:id",verifyTokenAndAdmin,productController.deleteProduct);
 
 //get product by ID
 router.get("/find/:id",verifyTokenAndAdmin,productController.getById);
