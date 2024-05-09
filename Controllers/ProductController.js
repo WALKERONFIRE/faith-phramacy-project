@@ -1,23 +1,39 @@
 const Product = require("../Models/Product");
 const multer = require("multer");
+const path = require('path');
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-      cb(null, 'uploads/product/') // Specify the directory to save uploads
+      cb(null, 'uploads/product'); // Specify the directory to save uploads
     },
     filename: function (req, file, cb) {
-      cb(null, file.originalname) 
-    }
+      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+      const ext = path.extname(file.originalname);
+      cb(null, file.fieldname + '-' + uniqueSuffix + ext); // Use unique filename
+    },
   });
-  const upload = multer({ storage: storage });
+  const fileFilter = (req, file, cb) => {
+    // Accept only JPG and PNG files
+    if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
+      cb(null, true);
+    } else {
+      cb(new Error('Only JPEG and PNG files are allowed'), false);
+    }
+  };
+  const upload = multer({ 
+    storage: storage,
+    fileFilter: fileFilter
+
+ });
 
 const addProduct = async (req, res) => {
-    const newProduct = new Product(req.body);
-    newProduct.image = req.file.path;
+   
     try{
+        const newProduct = new Product(req.body);
+        newProduct.image = req.file.path;
         const savedProduct = await newProduct.save();
         res.status(200).json(savedProduct); 
     }catch(err){
-        res.status(500).json(err);
+        return res.status(500).json(err);
     }
 };
 
@@ -41,7 +57,16 @@ const editProduct = async (req, res)=>{
 
 const deleteProduct = async (req, res)=>{
     try {
-        await Product.findByIdAndDelete(req.params.id)
+        const product = await Product.findById(req.params.id);
+
+        if (!product) {
+          return res.status(404).json({ message: 'Product not found' });
+        }
+        await Product.findByIdAndDelete(req.params.id);
+        if (product.image) {
+            const imagePath = path.join(__dirname, product.image);
+            fs.unlinkSync(imagePath); // Delete the file
+          }
         res.status(200).json("Product deleted successfully");
     }catch (err) {
         res.status(500).json(err);

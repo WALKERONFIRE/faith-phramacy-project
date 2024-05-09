@@ -16,4 +16,6 @@ router.get("/find/:id",verifyToken,categoryController.getById);
 router.post("/create",verifyTokenAndAdmin,categoryController.upload.single("image"),categoryController.addCategory);
 
 //edit category
+router.put("/update/:id",verifyTokenAndAdmin,categoryController.upload.single("image"),categoryController.updateCategory);
+
 module.exports = router;

@@ -22,5 +22,6 @@ router.get("/" ,verifyTokenAndAdmin,orderController.getallOrders);
 router.get("/income",verifyTokenAndAdmin,orderController.getIncome);
 
 //get by id
+router.get("/find/:id",verifyToken,orderController.getById);
       
 module.exports = router

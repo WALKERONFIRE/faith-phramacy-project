@@ -91,8 +91,20 @@ const deleteOrder = async(req,res)=> {
           res.status(500).json(err);
         }
       };
+
+      const getById = async (req,res)=>{
+        try{
+            const user = await Order.findById(req.params.id);
+            res.status(200).json(user);
+        }
+        catch(err)
+        {
+            res.status(500).json(err);
+        }
+    };
 module.exports = {
     createOrder,
+    getById,
     editOrder,
     deleteOrder,
     getByUserId,
