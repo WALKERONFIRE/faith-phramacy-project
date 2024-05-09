@@ -1,6 +1,9 @@
 {
   "name": "e-commerce-project",
   "version": "1.0.0",
+  "engines": { 
+      "node": "20.12.2" 
+   },
   "description": "",
   "main": "index.js",
   "scripts": {
