@@ -12,12 +12,12 @@ router.put("/update/:id",verifyTokenAndAdmin,productController.editProduct);
 router.delete("/delete/:id",verifyTokenAndAdmin,productController.deleteProduct);
 
 //get product by ID
-router.get("/find/:id",verifyTokenAndAdmin,productController.getById);
+router.get("/find/:id",verifyToken,productController.getById);
 
 //get all products
-router.get("/",verifyTokenAndAdmin,productController.getAllProducts);
+router.get("/",verifyToken,productController.getAllProducts);
 //get products by CategoryID
-router.get("/find/:categoryid",verifyTokenAndAuthorization,productController.getByCategoryId);
+router.get("/find/:categoryid",verifyToken,productController.getByCategoryId);
 
 
 module.exports = router;
