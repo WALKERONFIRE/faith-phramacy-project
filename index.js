@@ -32,7 +32,7 @@ mognoose
 
 
 
- app.listen(port ,"192.168.1.3", ()=>{
+ app.listen(port , ()=>{
     console.log("Backend server is running!"); 
 });
 
