@@ -9,7 +9,7 @@ module.exports = router;
 router.get("/",verifyTokenAndAdmin,userController.getAllUsers);
 
 // get user by ID
-router.get("/find/:id",verifyTokenAndAdmin,userController.getById);
+router.get("/find/:id",verifyTokenAndAuthorization,userController.getById);
 
 //DeleteUser 
 router.delete("/delete/:id",verifyTokenAndAuthorization,userController.deleteUser);
