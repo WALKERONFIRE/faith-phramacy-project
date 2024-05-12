@@ -78,6 +78,9 @@ const getById = async (req,res)=>{
 };
 
 const addCategory = async(req,res)=>{
+  if (!req.file) {
+    return res.status(400).json({ message: "No image uploaded" });
+}
 const result = await cloudinary.uploader.upload(req.file.path, {
     allowed_formats: ['jpg', 'png']
 });
@@ -95,34 +98,39 @@ const result = await cloudinary.uploader.upload(req.file.path, {
     }
     };
 
-    const updateCategory = async(req,res)=>
-        {
-            try {
-                const categoryId = req.params.id;
-                const { categoryname } = req.body;
-                let updatedCategory = {};
-            
-                if (req.file) {
-                  updatedCategory = {
-                    categoryname,
-                    image: req.file.path,
-                  };
-                } else {
-                  updatedCategory = { categoryname };
-                }
-            
-                const result = await Category.findByIdAndUpdate(categoryId, updatedCategory, { new: true });
-            
-                if (!result) {
-                  return res.status(404).json({ message: 'Category not found' });
-                }
-            
-                res.status(200).json(result);
-              } catch (error) {
-                console.error(error);
-                res.status(500).json({ message: 'Internal server error' });
-              }
-        };
+    const updateCategory = async (req, res) => {
+      const categoryId = req.params.id;
+  
+      try {
+          // Find the category by ID
+          let category = await Category.findById(categoryId);
+          if (!category) {
+              return res.status(404).json({ message: "Category not found" });
+          }
+  
+          // Check if a new image file is uploaded
+          let imageUrl = category.image; // Default to existing image URL
+          if (req.file) {
+              // Upload the new image to Cloudinary
+              const result = await cloudinary.uploader.upload(req.file.path, {
+                  allowed_formats: ['jpg', 'png']
+              });
+              imageUrl = result.secure_url; // Update the image URL
+          }
+  
+          // Update category properties
+          category.categoryname = req.body.categoryname || category.categoryname;
+          category.colour = req.body.colour || category.colour;
+          category.image = imageUrl;
+  
+          // Save the updated category to the database
+          const updatedCategory = await category.save();
+          res.status(200).json(updatedCategory);
+      } catch (error) {
+          console.error("Error editing category:", error);
+          res.status(500).json({ message: "Internal Server Error" });
+      }
+  };
         
 module.exports = {
     getAllCategories,

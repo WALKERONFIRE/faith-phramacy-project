@@ -6,7 +6,7 @@ const productController = require("../Controllers/ProductController");
 router.post('/create',verifyTokenAndAdmin,productController.upload.single("image"),productController.addProduct);
 
 //update product
-router.put("/update/:id",verifyTokenAndAdmin,productController.editProduct);
+router.put("/update/:id",verifyTokenAndAdmin,productController.upload.single('image'),productController.editProduct);
 
 //delete product
 router.delete("/delete/:id",verifyTokenAndAdmin,productController.deleteProduct);

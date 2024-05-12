@@ -27,6 +27,9 @@ const storage = multer.diskStorage({
  });
 
 const addProduct = async (req, res) => {
+    if (!req.file) {
+        return res.status(400).json({ message: "No image uploaded" });
+    }
     const result = await cloudinary.uploader.upload(req.file.path, {
         allowed_formats: ['jpg', 'png']
     });
@@ -50,21 +53,38 @@ const addProduct = async (req, res) => {
     }
 };
 
-const editProduct = async (req, res)=>{
-    
+const editProduct = async (req, res) => {
+
     try {
-        const updatedProduct = await Product.findByIdAndUpdate(
-            req.params.id,
-            {
-                $set : req.body
-            },
-            {
-                new : true
-            }
-        );
+        const productId = req.params.id;
+
+        let product = await Product.findById(productId);
+        if (!product) {
+            return res.status(404).json({ message: "Product not found" });
+        }
+
+        let imageUrl = product.image; 
+        if (req.file) {
+            // Upload the new image to Cloudinary
+            const result = await cloudinary.uploader.upload(req.file.path, {
+                allowed_formats: ['jpg', 'png']
+            });
+            imageUrl = result.secure_url; 
+        }
+
+        product.title = req.body.title || product.title;
+        product.desc = req.body.desc || product.desc;
+        product.image = imageUrl;
+        product.size = req.body.size || product.size;
+        product.color = req.body.color || product.color;
+        product.price = req.body.price || product.price;
+        product.categoryId = req.body.categoryId || product.categoryId;
+
+        const updatedProduct = await product.save();
         res.status(200).json(updatedProduct);
-    }catch (err) {
-        res.status(500).json(err);
+    } catch (error) {
+        console.error("Error editing product:", error);
+        res.status(500).json({ message: "Internal Server Error" });
     }
 };
 
